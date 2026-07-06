@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="cli-anything" agent="cli-anything-drawio/1.0.0" version="24.0.0">
+  <diagram id="diagram_1780670732824549" name="Page-1">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="v_1780670766623528" value="ClaudeTalk 系统架构图" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="480.0" y="5.0" width="320.0" height="40.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670770735330" value="钉钉 DingTalk" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="180.0" y="60.0" width="140.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670771428049" value="飞书 Feishu" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="570.0" y="60.0" width="140.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670772092733" value="Discord Bot" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="960.0" y="60.0" width="140.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670774966448" value="DingTalk Channel\nindex_dingtalk.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="180.0" y="160.0" width="140.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670775744620" value="Feishu Channel\nindex_feishu.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="570.0" y="160.0" width="140.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670776499511" value="Discord Channel\nindex_discord.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="960.0" y="160.0" width="140.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670777213629" value="Channel\nRegistry" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="50.0" y="160.0" width="100.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670781549843" value="startBot()\n消息路由 + 指令处理" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="250.0" y="280.0" width="220.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670782285093" value="Session Manager\nsession 持久化" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="530.0" y="280.0" width="180.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670782962782" value="Claude CLI Process\nspawn child_process" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="770.0" y="280.0" width="200.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670787421776" value="MCP SSE Server\nport 9877" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="220.0" y="400.0" width="180.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670788180025" value="Step Summarizer\nstep-summarizer.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="440.0" y="400.0" width="160.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670788961559" value="Phone Archive\nphone-archive.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="640.0" y="400.0" width="160.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670789711470" value="Logger\nlogger.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="840.0" y="400.0" width="120.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780670793124539" value="持久化存储\n.sessions.json / peer-messages / logs" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="400.0" y="510.0" width="500.0" height="50.0" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

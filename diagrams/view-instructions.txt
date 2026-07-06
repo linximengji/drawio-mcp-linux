@@ -1,0 +1,4 @@
+导出为 PNG 失败（drawio CLI 在 Windows 上不支持导出），请用以下方式查看：
+
+1. 打开 https://app.diagrams.net/
+2. File → Open → Device → 选择 `D:\ClaudeProjects\drawio-mcp\diagrams\proxy-routing-flow.drawio`

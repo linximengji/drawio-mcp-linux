@@ -1,0 +1,443 @@
+<mxfile host="Claude Code" modified="2026-07-03T00:00:00.000Z" agent="Claude" version="21.0.0">
+  <diagram name="Proxy路由流程" id="proxy-routing-v5">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ===== Title ===== -->
+        <mxCell id="title" value="Model Proxy v5 完整路由流程" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=20;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="10" width="600" height="36" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LANE A: Client ── Bypass ── L1                                       -->
+        <!-- ==================================================================== -->
+
+        <!-- Client -->
+        <mxCell id="client" value="Claude Code 请求 /v1/messages" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="460" y="60" width="180" height="44" as="geometry" />
+        </mxCell>
+
+        <!-- ── Bypass Group ── -->
+        <mxCell id="bypass_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ebf5eb;strokeColor=#82b366;dashed=1;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="50" y="60" width="280" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="bypass_title" value="Bypass — 跳过全部路由" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1;fontColor=#006600" vertex="1" parent="1">
+          <mxGeometry x="80" y="65" width="220" height="18" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bypass0" value="① @tag 直达: 消息末尾 @coder/@pro/@kimi" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="90" width="250" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="bypass0a" value="别名: coder→kimi-k2.7, glm→glm-5.2, kimi→kimi-k2.6, ds→qwen3.7-max-ds" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#666" vertex="1" parent="1">
+          <mxGeometry x="70" y="115" width="230" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="bypass1" value="② agent.md 指定: body[model] in ROUTES → 直达" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="140" width="250" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="bypass1a" value="命中后不做 classify/allocator/escalate" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#999" vertex="1" parent="1">
+          <mxGeometry x="70" y="165" width="200" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- bypass edge from client -->
+        <mxCell id="e_cl_bypass" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;strokeColor=#82b366;dashed=1;fontSize=8;fontColor=#82b366" edge="1" parent="1" source="client" target="bypass_bg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ===== L1 classify ===== -->
+        <mxCell id="l1" value="&lt;b&gt;L1 classify() — 快速规则&lt;/b&gt;&lt;br&gt;first-match · ~0ms" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13" vertex="1" parent="1">
+          <mxGeometry x="440" y="130" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2l1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2" edge="1" parent="1" source="client" target="l1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- L1 rules panel (positioned below L1 diamond) -->
+        <mxCell id="l1_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffcf0;strokeColor=#d6b656;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="50" y="240" width="260" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_title" value="L1 5 条规则（按序 first-match）" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="243" width="240" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_r1" value="① has_image → 'ocr-qa'（运行 OCR，L2 判定质量）" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="262" width="240" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_r3" value="② is_greeting_or_ack(≥400tok) → flash" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="280" width="240" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_r4" value="③ last_text &gt; 8000 tok → pro" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="298" width="240" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_r5" value="④ sub-agent(flash-sub model) → l2-sub-agent" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="316" width="240" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_r6" value="⑤ none matched → l2-classifier" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="60" y="334" width="240" height="18" as="geometry" />
+        </mxCell>
+
+        <!-- L1 edges to rules panel -->
+        <mxCell id="e_l1_info" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;strokeColor=#d6b656;dashed=1;fontSize=8;fontColor=#d6b656" edge="1" parent="1" source="l1" target="l1_panel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- OCR quality branch -->
+        <mxCell id="ocr_box" value="&lt;b&gt;OCR Quality Judgment&lt;/b&gt;&lt;br&gt;_judge_ocr_quality() 用 flash 判定" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="360" y="250" width="130" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l1_ocr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=9;fontColor=#999" edge="1" parent="1" source="l1" target="ocr_box">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ocr_use" value="use_ocr → 剥离图片+插入OCR文本→重新 classify()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="360" y="300" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ocr_use" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1" edge="1" parent="1" source="ocr_box" target="ocr_use">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ocr_reject" value="use_vision → 保留图片走 doubao 视觉" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="360" y="340" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ocr_reject" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1" edge="1" parent="1" source="ocr_box" target="ocr_reject">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- L1 direct hits -->
+        <mxCell id="l1_trivial" value="trivial → flash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="510" y="250" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l1_trivial" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#999" edge="1" parent="1" source="l1" target="l1_trivial">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="l1_long" value="very-long → pro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="610" y="250" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l1_long" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#999" edge="1" parent="1" source="l1" target="l1_long">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LANE B: L2 Classifier ── L2 Route Map                                -->
+        <!-- ==================================================================== -->
+
+        <!-- L2 Classifier -->
+        <mxCell id="l2" value="&lt;b&gt;L2 Flash Classifier&lt;/b&gt;&lt;br&gt;_classify_via_flash()&lt;br&gt;~200ms · ~50 tokens&lt;br&gt;输出: COMPLEXITY TASK_TYPE BUDGET" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="440" y="270" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l1l2" value="L1 未匹配 → L2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=9;fontColor=#666" edge="1" parent="1" source="l1" target="l2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- L2 complexity → tier key panel -->
+        <mxCell id="l2_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fffcf0;strokeColor=#d6b656;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="700" y="270" width="200" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_panel_title" value="L2 Complexity → Tier" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="710" y="274" width="180" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="l2r_map" value="trivial/simple → flash&lt;br&gt;moderate → pro&lt;br&gt;complex → max&lt;br&gt;error/timeout → pro (fallback)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="710" y="294" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="l2r_sub" value="sub-agent: moderate/complex 均→ pro，不碰 qwen" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#666" vertex="1" parent="1">
+          <mxGeometry x="710" y="354" width="180" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="e_l2_info" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;strokeColor=#d6b656;dashed=1;fontSize=8;fontColor=#d6b656" edge="1" parent="1" source="l2" target="l2_panel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- L2 edge to allocator -->
+        <mxCell id="e_l2_alloc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=9;fontColor=#b85450" edge="1" parent="1" source="l2" target="alloc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LANE C: Allocator ── Budget ── Final Route                           -->
+        <!-- ==================================================================== -->
+
+        <!-- Allocator -->
+        <mxCell id="alloc" value="&lt;b&gt;MultiModelAllocator.select()&lt;/b&gt;&lt;br&gt;(complexity, task_type, ratio) → TP model" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="440" y="390" width="220" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Allocator details panel -->
+        <mxCell id="mtx_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fef0f0;strokeColor=#b85450;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="310" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx_title" value="Allocator 映射矩阵 + ratio 计算" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="710" y="394" width="290" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx1" value="moderate: code→kimi-k2.7 | creative→glm-5.2 | long_ctxt→qwen3.6-flash" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="710" y="414" width="290" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx2" value="complex: code→kimi-k2.7 | creative→glm-5.2 | reasoning→qwen3.7-max" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="710" y="430" width="290" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx2b" value="complex: long_ctxt→qwen3.7-plus | general→qwen3.7-max" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="710" y="446" width="290" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx3" value="ratio = 0.5*sqrt(rem/total); 最后5天且&gt;10% → min 0.3; &lt;50 credits → 0" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="710" y="464" width="290" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="mtx4" value="hash_gate = md5(id+comp+task) % 10000 &lt; ratio*10000" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#666" vertex="1" parent="1">
+          <mxGeometry x="710" y="478" width="290" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- Budget context panel -->
+        <mxCell id="budget_panel" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#999;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="40" y="390" width="280" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="budget_title" value="Token Plan 预算上下文" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="394" width="260" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="budget_ctx" value="_build_budget_context()→get_real_credits() 从 token_usage.jsonl 实时扫描&lt;br&gt;60s 缓存 + 回写 routing_policy.json 保持 dashboard 同步&lt;br&gt;定价: qwen3.7-max(in=0.01/out=0.04)  qwen3.6-plus(0.002/0.012)  flash(0.001/0.006)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="50" y="414" width="260" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="e_budget_info" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;strokeColor=#999;dashed=1;fontSize=8;fontColor=#999" edge="1" parent="1" source="alloc" target="budget_panel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_alloc_resolve" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2" edge="1" parent="1" source="alloc" target="l2_resolve">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LANE D: _resolve_l2 ── 最终分发                                      -->
+        <!-- ==================================================================== -->
+
+        <mxCell id="l2_resolve" value="&lt;b&gt;_resolve_l2()&lt;/b&gt;&lt;br&gt;→ CLASSIFIER_ROUTE 查 tier key&lt;br&gt;→ allocator.select() 覆盖&lt;br&gt;→ sanitize(provider) → 最终 route" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="440" y="500" width="220" height="64" as="geometry" />
+        </mxCell>
+
+        <mxCell id="dispatch_label" value="▼ 最终模型分发 ▼" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=12;fontStyle=1;fontColor=#333" vertex="1" parent="1">
+          <mxGeometry x="440" y="580" width="220" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="e_resolve_dispatch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2" edge="1" parent="1" source="l2_resolve" target="dispatch_label">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LANE E: Fallback 链 + Quota Backup + Escalate                        -->
+        <!-- ==================================================================== -->
+
+        <mxCell id="fb_divider" value="" style="line;strokeWidth=2;html=1;strokeColor=#999;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="1080" height="10" as="geometry" />
+        </mxCell>
+        <mxCell id="fb_section" value="Fallback 链 + Quota Backup + Escalate" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=13;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="635" width="400" height="22" as="geometry" />
+        </mxCell>
+
+        <!-- Chain 1: flash → pro → max -->
+        <mxCell id="fb_chain1_label" value="Chain 1: flash → pro → max" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#888" vertex="1" parent="1">
+          <mxGeometry x="40" y="665" width="300" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_1" value="deepseek-v4-flash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="682" width="100" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_12" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#666" edge="1" parent="1" source="c1_1" target="c1_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_2" value="deepseek-v4-pro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="160" y="682" width="100" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c1_23" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#666" edge="1" parent="1" source="c1_2" target="c1_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c1_3" value="qwen3.7-max (MAAS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="280" y="682" width="100" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Chain 2: TP OAI models → pro → plus -->
+        <mxCell id="fb_chain2_label" value="Chain 2: TP OAI(kimi/glm/minimax) → v4-pro → qwen3.7-plus" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#888" vertex="1" parent="1">
+          <mxGeometry x="40" y="725" width="350" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_1" value="TP OAI (kimi/glm/minimax)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="40" y="742" width="100" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_12" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#666" edge="1" parent="1" source="c2_1" target="c2_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_2" value="deepseek-v4-pro" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="160" y="742" width="100" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c2_23" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#666" edge="1" parent="1" source="c2_2" target="c2_3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c2_3" value="qwen3.7-plus (MAAS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="280" y="742" width="100" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Chain 3: qwen3.6-flash → v4-flash -->
+        <mxCell id="fb_chain3_label" value="Chain 3: qwen3.6-flash → v4-flash" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=9;fontColor=#888" vertex="1" parent="1">
+          <mxGeometry x="40" y="785" width="200" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_1" value="qwen3.6-flash (MAAS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="40" y="802" width="100" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="e_c3_12" value="fallback" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;fontSize=8;fontColor=#666" edge="1" parent="1" source="c3_1" target="c3_2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="c3_2" value="deepseek-v4-flash" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" vertex="1" parent="1">
+          <mxGeometry x="160" y="802" width="100" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Quota Backup -->
+        <mxCell id="qb_label" value="Quota Backup (402/429)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#b85450" vertex="1" parent="1">
+          <mxGeometry x="500" y="665" width="160" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="qb1" value="qwen3.7-max-ds (DashScope)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="690" width="160" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="qb1_src" value="← qwen3.7-max 额度耗尽时自动切换" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#666" vertex="1" parent="1">
+          <mxGeometry x="670" y="695" width="180" height="20" as="geometry" />
+        </mxCell>
+
+        <!-- Escalate -->
+        <mxCell id="esc_label" value="Escalate 卡住升级" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1;fontColor=#cc0000" vertex="1" parent="1">
+          <mxGeometry x="500" y="740" width="160" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="esc1" value="detect_stuck() 检测 mistakes/circle/error" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="500" y="765" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="esc2" value="TIER_LADDER 闪→pro→max 升级 + 注入 ESCAPE_PROMPT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="680" y="765" width="210" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="e_esc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1" edge="1" parent="1" source="esc1" target="esc2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="esc_note" value="含图片请求不升级（升级目标无视觉能力→400）" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#999" vertex="1" parent="1">
+          <mxGeometry x="500" y="800" width="240" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- RIGHT SIDE: ROUTES + TIERS + Provider notes                          -->
+        <!-- ==================================================================== -->
+
+        <!-- ROUTES 列表 -->
+        <mxCell id="routes_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#ccc;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1060" y="60" width="280" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_title" value="ROUTES 模型列表 (13)" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1090" y="65" width="220" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_ds" value="DeepSeek (Anthropic):" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="88" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="routes1" value="· deepseek-v4-pro → qwen3.7-max fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="103" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes2" value="· deepseek-v4-flash → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="117" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_tp_anth" value="TP MAAS Anthropic:" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="136" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="routes3" value="· qwen3.7-max → ds quota_backup" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="151" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes4" value="· qwen3.7-plus → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="165" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes5" value="· qwen3.6-flash → v4-flash fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="179" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_tp_oai" value="TP MAAS OpenAI:" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="198" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="routes6" value="· kimi-k2.7-code → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="213" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes7" value="· kimi-k2.6 → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="227" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes8" value="· glm-5.2 → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="241" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes9" value="· glm-5.1 → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="255" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes10" value="· MiniMax-M2.5 → v4-pro fb" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="269" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_vision" value="视觉: doubao-1.5-vision-pro" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="288" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_ds_quota" value="Quota Backup: qwen3.7-max-ds (DashScope)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="308" width="250" height="15" as="geometry" />
+        </mxCell>
+        <mxCell id="routes_oai" value="OAI 兼容: qwen3.7-max-oai (给 Presenton 等)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#999" vertex="1" parent="1">
+          <mxGeometry x="1075" y="328" width="250" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- TIERS -->
+        <mxCell id="tiers_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#ccc;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1060" y="415" width="280" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="tiers_title" value="TIERS 抽象层" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1090" y="420" width="220" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="tiers1" value="flash → deepseek-v4-flash    pro → deepseek-v4-pro" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1075" y="440" width="250" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="tiers2" value="max → qwen3.7-max             vision → doubao-1.5-vision-pro" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1075" y="456" width="250" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="tiers3" value="环境变量 TIER_* 可覆盖" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#999" vertex="1" parent="1">
+          <mxGeometry x="1075" y="474" width="250" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- Provider notes -->
+        <mxCell id="sanitize_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#ccc;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1060" y="515" width="280" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sanitize_title" value="Provider 处理" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=10;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1090" y="520" width="220" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="san1" value="DeepSeek → sanitize_deepseek() (thinking 兼容)" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="540" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="san2" value="Anthropic → strip_thinking_blocks()" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="556" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="san3" value="OpenAI → strip_thinking_blocks()" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="572" width="250" height="14" as="geometry" />
+        </mxCell>
+        <mxCell id="san4" value="混合 thinking 历史 → 自动 disabled" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=8;fontColor=#666" vertex="1" parent="1">
+          <mxGeometry x="1075" y="588" width="250" height="14" as="geometry" />
+        </mxCell>
+
+        <!-- ==================================================================== -->
+        <!-- LEGEND                                                               -->
+        <!-- ==================================================================== -->
+        <mxCell id="leg_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#ccc;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1060" y="635" width="280" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="leg_title" value="图例" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontSize=11;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1090" y="640" width="220" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1_box" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="662" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg1_txt" value="L1/L2 路由决策" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1135" y="662" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2_box" value="" style="rhombus;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="687" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg2_txt" value="Allocator 预算调整" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1135" y="687" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=8" vertex="1" parent="1">
+          <mxGeometry x="1075" y="712" width="50" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg3_txt" value="Bypass / Fallback" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1135" y="712" width="120" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4_box" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=8;dashed=1" vertex="1" parent="1">
+          <mxGeometry x="1075" y="735" width="50" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="leg4_txt" value="Quota Backup" style="text;html=1;strokeColor=none;fillColor=none;align=left;fontSize=9" vertex="1" parent="1">
+          <mxGeometry x="1135" y="735" width="120" height="18" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="cli-anything" agent="cli-anything-drawio/1.0.0" version="24.0.0">
+  <diagram id="diagram_1780660172277908" name="Page-1">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1280" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="v_1780660195088488" value="飞书 WebSocket" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="440.0" y="20.0" width="160.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660195229758" value="buildContextMessage&#10;@ 处理 / 图片裁剪&#10;历史消息注入" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="420.0" y="110.0" width="200.0" height="60.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660195368607" value="流式?&#10;editMessage?+sendMessageWithId?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430.0" y="220.0" width="180.0" height="70.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660195503057" value="enqueueSession (P1)&#10;按 sessionKey 串行化" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="420.0" y="330.0" width="200.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660203200525" value="buildClaudeArgs&#10;session lookup / 摘要注入" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="420.0" y="425.0" width="200.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660204208523" value="Session 尺寸检查 (P2)&#10;200K → async compact&#10;400K → sync compact&#10;600K → summarize+reset" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400.0" y="515.0" width="240.0" height="60.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660205152733" value="claude CLI spawn&#10;+P3 超时保护 (120s)&#10;+P3 重试 (2次)" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="410.0" y="625.0" width="220.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660208273884" value="流式事件解析&#10;thinking→tool_use→tool_result→text→result&#10;/tool_use→/tool_result 合并推送" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="390.0" y="720.0" width="260.0" height="55.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660209148998" value="飞书回复&#10;editMessage / sendMessage" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="420.0" y="815.0" width="200.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660209972754" value="退出 / 关闭" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460.0" y="910.0" width="120.0" height="30.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660212753229" value="P1 并发队列: sessionKey 串行化" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="680.0" y="330.0" width="200.0" height="35.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660213608879" value="P2 三级阈值: 200K/400K/600K" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="680.0" y="530.0" width="200.0" height="35.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660214483660" value="P3 超时(120s)+重试(2次)+上下文注入" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="680.0" y="635.0" width="240.0" height="35.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660215417923" value="FeishuClient (Channel)&#10;index_feishu.ts" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="170.0" y="100.0" width="150.0" height="50.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660216303231" value="claude.ts (核心逻辑)" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="170.0" y="400.0" width="150.0" height="40.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660217109337" value="index.ts (入口路由)" style="rect;" vertex="1" parent="1">
+          <mxGeometry x="170.0" y="220.0" width="150.0" height="40.0" as="geometry" />
+        </mxCell>
+        <mxCell id="v_1780660227654123" value="ClaudeTalk 完整数据流 (飞书)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="1">
+          <mxGeometry x="490.0" y="-30.0" width="300.0" height="30.0" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
